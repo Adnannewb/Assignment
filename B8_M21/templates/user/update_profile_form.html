@@ -1,0 +1,18 @@
+{% extends 'blog/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Update Profile | MyBlog{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+	<div class="col-lg-7 col-xl-6">
+		<div class="surface-card p-4 p-lg-5">
+			<h1 class="h2 section-heading mb-2">Update Profile</h1>
+			<p class="text-secondary mb-4">Keep your name and email current for posts and comments.</p>
+			<form method="post">
+				{% csrf_token %}
+				{{ form|crispy }}
+				<button class="btn btn-brand w-100 mt-2" type="submit">Update</button>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}

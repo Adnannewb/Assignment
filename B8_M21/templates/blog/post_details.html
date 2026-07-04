@@ -1,0 +1,103 @@
+{% extends 'blog/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{{ post.title }} | MyBlog{% endblock %}
+{% block content %}
+<div class="row g-4">
+	<div class="col-lg-8">
+		<article class="surface-card p-4 p-lg-5 mb-4">
+			<h1 class="display-6 section-heading mb-3">{{ post.title }}</h1>
+			<div class="d-flex flex-wrap gap-3 align-items-center meta mb-3">
+				<span><i class="bi bi-person"></i> {{ post.author.username }}</span>
+				<span><i class="bi bi-calendar3"></i> {{ post.created_at|date:"F d, Y" }}</span>
+				<span><i class="bi bi-eye"></i> {{ post.view_count }} views</span>
+				<span><i class="bi bi-heart"></i> {{ like_count }} likes</span>
+			</div>
+
+			<div class="mb-3 d-flex flex-wrap gap-2">
+				{% if post.category %}
+					<a class="tag-pill" href="{% url 'post_list' %}?category={{ post.category.name }}">{{ post.category.name }}</a>
+				{% endif %}
+				{% for tag in post.tag.all %}
+					<a class="tag-pill" href="{% url 'post_list' %}?tag={{ tag.name }}">{{ tag.name }}</a>
+				{% endfor %}
+			</div>
+
+			<hr>
+			<div class="post-content fs-5 lh-lg">
+				{{ post.content|linebreaksbr }}
+			</div>
+
+			<div class="d-flex flex-wrap gap-2 mt-4">
+				{% if user.is_authenticated %}
+					<a href="{% url 'like_post' post.id %}" class="btn {% if is_liked %}btn-success{% else %}btn-outline-primary{% endif %}">
+						{% if is_liked %}Liked{% else %}Like{% endif %}
+					</a>
+					{% if user == post.author %}
+						<a href="{% url 'post_update' post.id %}" class="btn btn-outline-secondary">Edit</a>
+						<a href="{% url 'post_delete' post.id %}" class="btn btn-outline-danger">Delete</a>
+					{% endif %}
+				{% else %}
+					<a href="{% url 'login' %}" class="btn btn-outline-primary">Login to like</a>
+				{% endif %}
+				<span class="btn btn-light disabled">{{ like_count }} people liked this</span>
+			</div>
+		</article>
+
+		<section class="surface-card p-4 p-lg-5">
+			<h2 class="h4 section-heading mb-4"><i class="bi bi-chat-dots-fill text-primary me-1"></i> Comments</h2>
+
+			{% if user.is_authenticated %}
+				<form method="post" class="mb-4">
+					{% csrf_token %}
+					{{ comment_form|crispy }}
+					<button class="btn btn-brand mt-2" type="submit">Post Comment</button>
+				</form>
+			{% else %}
+				<div class="alert alert-warning mb-4">
+					You must be <a href="{% url 'login' %}" class="alert-link">logged in</a> to comment.
+				</div>
+			{% endif %}
+
+			<div class="vstack gap-3">
+				{% for comment in comments %}
+					<div class="soft-card p-3">
+						<div class="d-flex justify-content-between flex-wrap gap-2 mb-2 meta">
+							<strong>{{ comment.author.username }}</strong>
+							<span>{{ comment.created_at|date:"F d, Y g:i a" }}</span>
+						</div>
+						<p class="mb-0">{{ comment.content|linebreaksbr }}</p>
+					</div>
+				{% empty %}
+					<div class="text-center text-secondary py-3">No comments yet. Be the first to share feedback.</div>
+				{% endfor %}
+			</div>
+		</section>
+	</div>
+
+	<div class="col-lg-4">
+		<div class="sticky-sidebar vstack gap-4">
+			<aside class="surface-card p-4">
+				<h3 class="h5 section-heading mb-3">Post Info</h3>
+				<ul class="list-unstyled mb-0 vstack gap-2 meta">
+					<li><i class="bi bi-person"></i> Author: {{ post.author.username }}</li>
+					<li><i class="bi bi-calendar3"></i> Published: {{ post.created_at|date:"M. j, Y" }}</li>
+					<li><i class="bi bi-arrow-repeat"></i> Updated: {{ post.updated_at|date:"M. j, Y" }}</li>
+					<li><i class="bi bi-eye"></i> Views: {{ post.view_count }}</li>
+				</ul>
+			</aside>
+
+			<aside class="surface-card p-4">
+				<h3 class="h5 section-heading mb-3">Categories & Tags</h3>
+				<div class="d-flex flex-wrap gap-2">
+					{% if post.category %}
+						<a href="{% url 'post_list' %}?category={{ post.category.name }}" class="tag-pill">{{ post.category.name }}</a>
+					{% endif %}
+					{% for tag in post.tag.all %}
+						<a href="{% url 'post_list' %}?tag={{ tag.name }}" class="tag-pill">{{ tag.name }}</a>
+					{% endfor %}
+				</div>
+			</aside>
+		</div>
+	</div>
+</div>
+{% endblock %}

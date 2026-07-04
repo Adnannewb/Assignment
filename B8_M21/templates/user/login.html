@@ -1,0 +1,21 @@
+{% extends 'blog/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Login | MyBlog{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+	<div class="col-lg-6 col-xl-5">
+		<div class="surface-card p-4 p-lg-5">
+			<h1 class="h2 section-heading mb-2">Login</h1>
+			<p class="text-secondary mb-4">Access your blog dashboard and profile tools.</p>
+			<form method="post">
+				{% csrf_token %}
+				{{ form|crispy }}
+				<button class="btn btn-brand w-100 mt-2" type="submit">Login</button>
+			</form>
+			<div class="text-center mt-3 text-secondary">
+				Don’t have an account? <a href="{% url 'signup_view' %}">Sign up</a>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

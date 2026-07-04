@@ -1,0 +1,23 @@
+{% extends 'blog/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{% if mode == 'update' %}Edit Post{% else %}Create Post{% endif %} | MyBlog{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+	<div class="col-lg-9 col-xl-8">
+		<div class="surface-card p-4 p-lg-5">
+			<h1 class="h2 section-heading mb-3">
+				{% if mode == 'update' %}Edit Post{% else %}Create a New Post{% endif %}
+			</h1>
+			<p class="text-secondary mb-4">Fill in the post details below. Crispy forms and Bootstrap 5 handle the layout and spacing automatically.</p>
+			<form method="post">
+				{% csrf_token %}
+				{{ form|crispy }}
+				<div class="d-flex flex-wrap gap-2 mt-3">
+					<button type="submit" class="btn btn-brand">{% if mode == 'update' %}Update Post{% else %}Publish Post{% endif %}</button>
+					<a href="{% url 'post_list' %}" class="btn btn-outline-secondary">Cancel</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}
