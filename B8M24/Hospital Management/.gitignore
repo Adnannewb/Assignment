@@ -1,0 +1,21 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+venv/
+
+# Local database and tooling
+*.sqlite3
+.vscode/
+
+# Runtime files
+*.log
+media/
+staticfiles/
