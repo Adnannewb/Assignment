@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+scripts/dist/
+
+# Local env files (keep the example)
+.env
+.env.*
+!.env.example
+
+# Logs and editor cruft
+*.log
+npm-debug.log*
+.vscode/
+.DS_Store
